@@ -1,64 +1,90 @@
+/* Sab kuch reset karo */
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: #000; color: #0ff; width: 100vw; height: 100vh; overflow: hidden; font-family: 'Courier New', monospace; display: flex; justify-content: center; align-items: center; }
 
-/* Menu Button Locked to Top-Right */
-#menu-switch { position: fixed; top: 20px; right: 30px; z-index: 999; font-size: 50px; background: transparent; border: none; color: #0ff; text-shadow: 0 0 20px #0ff; cursor: pointer; }
+body { 
+    background: #000; 
+    color: #0ff; 
+    width: 100vw; 
+    height: 100vh; 
+    overflow: hidden; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    font-family: sans-serif;
+}
 
-/* Massive Face Container */
-.face-container { display: flex; flex-direction: column; align-items: center; gap: 10vh; transition: filter 0.4s; width: 100%; }
+/* 3-DOT MENU */
+#menu-switch { 
+    position: absolute; 
+    top: 20px; 
+    right: 30px; 
+    z-index: 9999; 
+    font-size: 50px; 
+    background: transparent; 
+    border: none; 
+    color: #0ff; 
+    cursor: pointer;
+    text-shadow: 0 0 20px #0ff;
+}
+
+/* FACE CONTAINER */
+.face-container { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 12vh; 
+    transition: all 0.5s ease;
+}
+
 .eyes { display: flex; gap: 15vw; }
-.eye { width: 38vh; height: 38vh; background: #0ff; border-radius: 50%; box-shadow: 0 0 50px #0ff, inset 0 0 15px #fff; transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); animation: blink 5s infinite; }
-.mouth { width: 35vw; height: 10vh; background: #0ff; border-radius: 50px; box-shadow: 0 0 40px #0ff; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55); }
-.status-text { position: absolute; bottom: 5vh; font-size: 3vmin; letter-spacing: 5px; opacity: 0.5; }
 
-/* --- EMOTIONS --- */
-.happy .eye { height: 15vh; border-radius: 50vw 50vw 5vw 5vw; margin-top: 25vh; }
-.happy .mouth { width: 50vw; height: 25vh; border-radius: 2vw 2vw 50vw 50vw; margin-top: -8vh; }
-.sad .eye { height: 20vh; border-radius: 5vw 5vw 50vw 50vw; opacity: 0.8; }
-.sad .mouth { width: 30vw; height: 10vh; border-radius: 50vw 50vw 5vw 5vw; margin-top: 5vh; }
+.eye { 
+    width: 35vh; 
+    height: 35vh; 
+    background: #0ff; 
+    border-radius: 50%; 
+    box-shadow: 0 0 50px rgba(0, 255, 255, 0.9); 
+    transition: all 0.3s ease; 
+    animation: blink 5s infinite;
+}
+
+.mouth { 
+    width: 40vw; 
+    height: 8vh; 
+    background: #0ff; 
+    border-radius: 50px; 
+    box-shadow: 0 0 40px rgba(0, 255, 255, 0.9); 
+    transition: all 0.15s ease-out; 
+}
+
+/* CONTROL PANEL */
+.controls-panel { 
+    position: absolute; top: 0; right: 0; width: 320px; height: 100vh; 
+    background: rgba(0,0,0,0.95); border-left: 2px solid #0ff; padding: 20px; 
+    transform: translateX(100%); transition: transform 0.3s ease-out; z-index: 10000; 
+    display: flex; flex-direction: column; overflow-y: auto;
+}
+.panel-active { transform: translateX(0); }
+
+.close-btn { background: rgba(255,0,0,0.2) !important; border: 1px solid #ff4444 !important; color: #ff4444 !important; margin-bottom: 20px; }
+button { background: #000; border: 1px solid #0ff; color: #0ff; padding: 15px; border-radius: 8px; font-weight: bold; margin-bottom: 10px; cursor: pointer; width: 100%; }
+button:hover { background: #0ff; color: #000; }
+#videoFeed { width: 100%; height: 180px; border: 2px solid #0ff; border-radius: 10px; object-fit: cover; margin-top: 10px; }
+
+/* EMOTIONS */
+.happy .eye { height: 12vh; border-radius: 50vw 50vw 5vw 5vw; margin-top: 10vh; }
+.happy .mouth { width: 45vw; height: 18vh; border-radius: 2vw 2vw 40vw 40vw; }
+
+.sad .eye { height: 15vh; border-radius: 5vw 5vw 50vw 50vw; }
+.sad .mouth { width: 30vw; height: 8vh; border-radius: 40vw 40vw 5vw 5vw; }
+
+.sleepy .eye { height: 3vh; border-radius: 10px; opacity: 0.3; }
+.sleepy .mouth { width: 15vw; height: 3vh; opacity: 0.3; }
+
 .angry .eye.left { transform: rotate(25deg); border-radius: 5vw 50vw 5vw 5vw; }
 .angry .eye.right { transform: rotate(-25deg); border-radius: 50vw 5vw 5vw 5vw; }
-.sleepy .eye { height: 4vh; border-radius: 5vw; margin-top: 35vh; opacity: 0.4; }
-.surprised .eye { width: 45vh; height: 45vh; margin-top: -5vh; }
-.wink .eye.left { height: 4vh; border-radius: 5vw; margin-top: 35vh; animation: none; }
-.talking .mouth { height: 25vh; border-radius: 20vh; width: 25vh; }
 
-@keyframes blink { 0%, 92%, 100% { transform: scaleY(1); } 96% { transform: scaleY(0.1); } }
+/* SHUTDOWN - Sab kuch gayab */
+.shutdown .eye, .shutdown .mouth { display: none !important; }
 
-/* Stealth Panel */
-.controls-panel { position: fixed; top: 0; right: 0; width: 350px; height: 100vh; background: rgba(0,0,0,0.98); border-left: 2px solid #0ff; padding: 25px; transform: translateX(100%); transition: transform 0.3s ease-in-out; z-index: 1000; }
-.panel-active { transform: translateX(0); }
-.panel-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #0ff3; padding-bottom: 15px; margin-bottom: 20px; }
-.close-btn { background: transparent; border: none; color: #0ff; font-size: 40px; cursor: pointer; }
-.btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-button { background: #111; border: 1px solid #0ff; color: #0ff; padding: 15px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 14px; }
-button:hover { background: #0ff; color: #000; }
-#videoFeed { width: 100%; height: 180px; border: 1px solid #0ff; border-radius: 10px; margin-top: 20px; object-fit: cover; }
-/* ========================================= */
-/* 🛑 SHUTDOWN STATE (Screen Blackout)       */
-/* ========================================= */
-.shutdown .eye, .shutdown .mouth { 
-    opacity: 0 !important; 
-    transform: scale(0); 
-    transition: all 1s ease-in-out; 
-}
-
-/* ========================================= */
-/* 🗣️ REALISTIC LIP SYNC FAST TRANSITION    */
-/* ========================================= */
-.is-speaking {
-    transition: all 0.15s ease-out !important; /* Bolte waqt munh fast react karega */
-}
-/* Exit button style */
-.close-btn {
-    background: rgba(255, 0, 0, 0.2) !important;
-    border: 1px solid #ff4444 !important;
-    color: #ff4444 !important;
-    font-size: 18px !important;
-    margin-bottom: 10px;
-}
-
-.close-btn:hover {
-    background: #ff4444 !important;
-    color: #000 !important;
-}
+@keyframes blink { 0%, 90%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
