@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <link rel="stylesheet" href="style.css">
-    <title>ONIX</title>
+    <link rel="manifest" href="manifest.json">
+    <title>ONIX Humanoid</title>
 </head>
 <body onclick="handleGlobalClick()">
 
@@ -16,21 +17,26 @@
             <div class="eye right"></div>
         </div>
         <div class="mouth"></div>
+        <div class="status-text">SYSTEM: ACTIVE</div>
     </div>
 
     <div id="control-panel" class="controls-panel" onclick="event.stopPropagation();">
         <div class="panel-header">
-            <span>COMMAND CENTER</span>
+            <span>ONIX COMMANDS</span>
             <button class="close-btn" onclick="togglePanel()">×</button>
         </div>
         <div class="panel-content">
-            <button onclick="sendCommand('ON')">POWER ON</button>
-            <button onclick="sendCommand('OFF')">SHUTDOWN</button>
-            <button onclick="sendCommand('SLEEP')">SLEEP</button>
-            <button onclick="sendCommand('WAKE')">WAKE UP</button>
-            <hr style="border: 0.5px solid #0ff5;">
-            <button onclick="switchCamera('user')">FRONT CAM</button>
-            <button onclick="switchCamera('environment')">BACK CAM</button>
+            <div class="btn-grid">
+                <button onclick="sendCommand('ON')">POWER ON</button>
+                <button onclick="sendCommand('OFF')">SHUTDOWN</button>
+                <button onclick="sendCommand('SLEEP')">SLEEP</button>
+                <button onclick="sendCommand('WAKE')">WAKE UP</button>
+            </div>
+            <hr style="border:0.5px solid #0ff3;">
+            <div class="btn-grid">
+                <button onclick="switchCamera('user')">FRONT CAM</button>
+                <button onclick="switchCamera('environment')">BACK CAM</button>
+            </div>
             <video id="videoFeed" autoplay playsinline muted></video>
         </div>
     </div>
