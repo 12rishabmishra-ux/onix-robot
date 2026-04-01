@@ -1,5 +1,5 @@
 const CLOUD_URL = "https://Onix-Labs-ONIX-ROBOT-BRAIN.hf.space"; 
-const HF_TOKEN = "hf_TERA_TOKEN_YAHAN_DAAL"; // Apna Token dalna mat bhulna
+const HF_TOKEN = "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"; // Apna Token dalna mat bhulna
 
 let currentStream;
 const video = document.getElementById('videoFeed');
