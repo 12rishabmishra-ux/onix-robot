@@ -2,41 +2,45 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, orientation=landscape, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <link rel="stylesheet" href="style.css">
-    <link rel="manifest" href="manifest.json">
-    <title>ONIX Master Control</title>
+    <title>ONIX</title>
 </head>
-<body class="landscape">
-    <div class="main-layout">
-        <button id="menu-switch" onclick="togglePanel()">⋮</button>
-        
-        <div class="face-container">
-            <div class="eyes">
-                <div class="eye left"></div>
-                <div class="eye right"></div>
-            </div>
-            <div class="mouth"></div> <div class="status-text">SYSTEM: ACTIVE</div>
-        </div>
+<body onclick="goFullScreen()">
 
-        <div id="control-panel" class="controls-panel">
-            <div class="panel-content">
-                <div class="power-group">
-                    <button onclick="sendCommand('ON')">POWER ON</button>
-                    <button onclick="sendCommand('OFF')">SHUTDOWN</button>
-                    <button onclick="sendCommand('SLEEP')">SLEEP</button>
-                    <button onclick="sendCommand('WAKE')">WAKE UP</button>
-                </div>
-                <div class="camera-group">
-                    <button onclick="switchCamera('user')">FRONT</button>
-                    <button onclick="switchCamera('environment')">BACK</button>
-                    <button onclick="dualCamera()">DUAL</button>
-                </div>
-                <video id="videoFeed" autoplay playsinline muted></video>
-                <div id="install-alert" style="display:none; color: yellow; text-align:center;">👉 Add to Home Screen to use!</div>
-            </div>
+    <button id="menu-switch" onclick="event.stopPropagation(); togglePanel();">⋮</button>
+
+    <div class="face-container">
+        <div class="eyes">
+            <div class="eye left"></div>
+            <div class="eye right"></div>
+        </div>
+        <div class="mouth"></div>
+    </div>
+
+    <div id="control-panel" class="controls-panel" onclick="event.stopPropagation();">
+        <div class="panel-content">
+            <button onclick="sendCommand('ON')">POWER ON</button>
+            <button onclick="sendCommand('OFF')">SHUTDOWN</button>
+            <button onclick="sendCommand('SLEEP')">SLEEP</button>
+            <button onclick="sendCommand('WAKE')">WAKE UP</button>
+            <button onclick="switchCamera('user')">FRONT CAM</button>
+            <button onclick="switchCamera('environment')">BACK CAM</button>
+            <video id="videoFeed" autoplay playsinline muted></video>
         </div>
     </div>
+
     <script src="app.js"></script>
+    <script>
+        // FULLSCREEN API: Browser ke bars hatane ka asook tareeka
+        function goFullScreen() {
+            let elem = document.documentElement;
+            if (!document.fullscreenElement) {
+                elem.requestFullscreen().catch((err) => {
+                    console.log("Error attempting to enable fullscreen:", err);
+                });
+            }
+        }
+    </script>
 </body>
 </html>
