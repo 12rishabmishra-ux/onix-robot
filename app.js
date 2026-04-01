@@ -2,7 +2,7 @@
 // 1. CONFIGURATION (Apna Data Yahan Daalein)
 // ======================================================
 const CLOUD_URL = "https://Onix-Labs-ONIX-ROBOT-BRAIN.hf.space"; // Apna HF Space URL
-const HF_TOKEN = "hf_YAHAN_APNA_TOKEN_DAALEIN"; // Apna HF Read Token
+const HF_TOKEN = "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"; // Apna HF Read Token
 
 let currentStream;
 let isSpeaking = false;
