@@ -1,9 +1,10 @@
-// 1. Apni details yahan bharein
-const CLOUD_URL = "https://Onix-Labs-ONIX-ROBOT-BRAIN.hf.space"; 
-const HF_TOKEN = "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"; 
+// 1. Apni details yahan bharein (HTTPS compulsory hai)
+const CLOUD_URL = "https://Onix-Labs-ONIX-ROBOT-BRAIN.hf.space"; // <-- Embed URL yahan daalein
+const HF_TOKEN = "hf_..."; // <-- 'Read' Access Token yahan paste karein
 
 let currentStream;
 const video = document.getElementById('videoFeed');
+const faceContainer = document.querySelector('.face-container');
 
 // Camera badalne ka logic
 async function switchCamera(mode) {
@@ -31,21 +32,33 @@ async function sendFrame() {
                 method: 'POST',
                 body: formData,
                 headers: {
-                    "Authorization": `Bearer ${HF_TOKEN}` // <--- YEHI HAI WO MAIN BADLAAV
+                    "Authorization": `Bearer ${HF_TOKEN}` // <-- Authentication header for Private Space
                 }
             });
             const data = await response.json();
-            console.log("Cloud Response:", data);
-        } catch (e) { console.log("Connecting..."); }
+            // add voice synthesis logic here based on data.emotion
+        } catch (e) { console.log("Connection busy..."); }
     }, 'image/jpeg', 0.5);
 }
 
-// Power Commands (ESP32 ke liye)
-function sendCommand(cmd) {
-    console.log("Action: " + cmd);
-    // Yahan hum ESP32 ko local network pe hit karenge
-    // fetch(`http://192.168.x.x/${cmd}`); 
+// Stealth Panel logic (Toggle functionality)
+function togglePanel() {
+    document.getElementById('control-panel').classList.toggle('panel-active');
 }
+
+// Power Commands (Arduino/ESP32 controls)
+function sendCommand(cmd) {
+    console.log("ESP32 CMD: " + cmd);
+    // Yahan commands process hone ke baad emotion update logic bhi aayega
+}
+
+// PWA Install Prompt Logic (Making it an 'Asli App')
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('install-alert').style.display = 'block';
+});
 
 // Start everything
 switchCamera('user');
