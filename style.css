@@ -1,32 +1,56 @@
 body { background: #000; color: #0ff; font-family: 'Courier New', monospace; margin: 0; overflow: hidden; }
 .main-layout { display: flex; height: 100vh; position: relative; }
+#menu-switch { position: absolute; top: 10px; right: 10px; z-index: 1000; font-size: 30px; background: transparent; border: none; color: #0ff; cursor: pointer; }
+.face-container { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; }
 
-/* Stealth Menu Button */
-#menu-switch {
-    position: absolute; top: 10px; right: 10px; z-index: 1000;
-    font-size: 30px; background: transparent; border: none; color: #0ff; cursor: pointer;
+/* --- THE EYES ENGINE --- */
+.eyes { display: flex; gap: 50px; margin-bottom: 40px; }
+.eye { 
+    width: 110px; height: 110px; background: #0ff; border-radius: 50%; 
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.8); 
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55); 
+    animation: blink 4s infinite;
 }
 
-/* Face (Centered & Real Emotions) */
-.face-container { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; border-right: 1px solid #0ff3; transition: opacity 0.3s; }
-.eyes { display: flex; gap: 40px; margin-bottom: 30px; }
-.eye { width: 100px; height: 100px; background: radial-gradient(circle, #0ff 30%, transparent 70%); border: 4px solid #0ff; border-radius: 50%; box-shadow: 0 0 20px #0ff; animation: glow 2s infinite alternate; }
-
-/* Mouth (Voiceless issue fixed) */
-.mouth { width: 150px; height: 10px; background: #0ff; border-radius: 5px; box-shadow: 0 0 20px #0ff; transition: all 0.3s; }
-.talking .mouth { height: 40px; animation: speak 0.3s infinite alternate; }
-
-/* Stealth Panel Logic */
-.controls-panel {
-    position: absolute; top: 0; right: 0; width: 350px; height: 100vh;
-    background: rgba(0, 0, 0, 0.9); border-left: 2px solid #0ff; padding: 20px; box-sizing: border-box;
-    transform: translateX(100%); transition: transform 0.3s ease-out; z-index: 999; display: flex; flex-direction: column;
+/* --- THE MOUTH ENGINE --- */
+.mouth { 
+    width: 60px; height: 10px; background: #0ff; border-radius: 5px; 
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.5); 
+    transition: all 0.1s; /* Fast transition for lip-sync */
 }
-.panel-active { transform: translateX(0); } /* <--- THIS ACTIVATES THE PANEL */
 
+/* --- THE 8 EMOTIONS --- */
+/* 1. Happy (^ ^) */
+.happy .eye { height: 50px; border-radius: 100px 100px 15px 15px; margin-top: 30px; }
+/* 2. Sad (U U) */
+.sad .eye { height: 60px; border-radius: 15px 15px 100px 100px; margin-top: 10px; opacity: 0.7; }
+.sad .mouth { width: 50px; border-radius: 50px 50px 10px 10px; height: 15px; margin-top: 20px; }
+/* 3. Angry (\ /) */
+.angry .eye.left { transform: rotate(25deg); border-radius: 15px 100px 15px 15px; }
+.angry .eye.right { transform: rotate(-25deg); border-radius: 100px 15px 15px 15px; }
+.angry .mouth { width: 70px; height: 10px; border-radius: 50px 50px 10px 10px; }
+/* 4. Sleepy (- -) */
+.sleepy .eye { height: 15px; border-radius: 10px; margin-top: 45px; opacity: 0.4; animation: none; }
+.sleepy .mouth { width: 20px; opacity: 0.4; }
+/* 5. Surprised (O O) */
+.surprised .eye { width: 130px; height: 130px; margin-top: -10px; }
+.surprised .mouth { width: 40px; height: 40px; border-radius: 50%; }
+/* 6. Confused / Sceptic (o -) */
+.confused .eye.left { height: 30px; border-radius: 10px; margin-top: 40px; }
+.confused .mouth { width: 40px; transform: rotate(-15deg); }
+/* 7. Wink (- O) */
+.wink .eye.left { height: 15px; border-radius: 10px; margin-top: 45px; animation: none; }
+.wink .mouth { width: 60px; height: 30px; border-radius: 10px 10px 50px 50px; transform: rotate(10deg); }
+
+/* Lip Sync Animation Class */
+.talking .mouth { height: 40px; border-radius: 20px; width: 50px; }
+
+@keyframes blink { 0%, 90%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
+
+/* Controls Panel */
+.controls-panel { position: absolute; top: 0; right: 0; width: 350px; height: 100vh; background: rgba(0,0,0,0.9); border-left: 2px solid #0ff; padding: 20px; box-sizing: border-box; transform: translateX(100%); transition: transform 0.3s ease-out; z-index: 999; display: flex; flex-direction: column; }
+.panel-active { transform: translateX(0); }
 .panel-content { display: grid; grid-template-rows: auto auto 1fr; gap: 15px; }
-button { background: rgba(0, 255, 255, 0.1); border: 1px solid #0ff; color: #0ff; padding: 10px; cursor: pointer; border-radius: 5px; font-weight: bold; width: 100%; }
+button { background: rgba(0,255,255,0.1); border: 1px solid #0ff; color: #0ff; padding: 10px; cursor: pointer; border-radius: 5px; font-weight: bold; width: 100%; }
 button:hover { background: #0ff; color: #000; }
 #videoFeed { width: 100%; height: 180px; border: 1px solid #0ff; border-radius: 10px; margin-top: 10px; }
-@keyframes glow { from { opacity: 0.5; } to { opacity: 1; } }
-@keyframes speak { from { height: 10px; } to { height: 40px; } }
