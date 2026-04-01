@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="style.css">
     <title>ONIX</title>
 </head>
-<body onclick="goFullScreen()">
+<body onclick="handleGlobalClick()">
 
     <button id="menu-switch" onclick="event.stopPropagation(); togglePanel();">⋮</button>
 
@@ -19,11 +19,16 @@
     </div>
 
     <div id="control-panel" class="controls-panel" onclick="event.stopPropagation();">
+        <div class="panel-header">
+            <span>COMMAND CENTER</span>
+            <button class="close-btn" onclick="togglePanel()">×</button>
+        </div>
         <div class="panel-content">
             <button onclick="sendCommand('ON')">POWER ON</button>
             <button onclick="sendCommand('OFF')">SHUTDOWN</button>
             <button onclick="sendCommand('SLEEP')">SLEEP</button>
             <button onclick="sendCommand('WAKE')">WAKE UP</button>
+            <hr style="border: 0.5px solid #0ff5;">
             <button onclick="switchCamera('user')">FRONT CAM</button>
             <button onclick="switchCamera('environment')">BACK CAM</button>
             <video id="videoFeed" autoplay playsinline muted></video>
@@ -31,16 +36,5 @@
     </div>
 
     <script src="app.js"></script>
-    <script>
-        // FULLSCREEN API: Browser ke bars hatane ka asook tareeka
-        function goFullScreen() {
-            let elem = document.documentElement;
-            if (!document.fullscreenElement) {
-                elem.requestFullscreen().catch((err) => {
-                    console.log("Error attempting to enable fullscreen:", err);
-                });
-            }
-        }
-    </script>
 </body>
 </html>
