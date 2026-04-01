@@ -1,82 +1,96 @@
-// --- 1. CONFIG ZONE (Yahan apni details bharein) ---
 const CLOUD_URL = "https://Onix-Labs-ONIX-ROBOT-BRAIN.hf.space"; 
-const HF_TOKEN = "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"; 
+const HF_TOKEN = "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"; // Apna Token dalna mat bhulna
 
 let currentStream;
 const video = document.getElementById('videoFeed');
 const faceContainer = document.querySelector('.face-container');
 
-// --- 2. FACE & EMOTION ZONE (The 'Vector' Look) ---
-
-// Ye function chehre ke expressions badlega
+// Emotions set karne ka function
 function setEmotion(emotionName) {
-    const face = document.querySelector('.face-container');
-    // Purane saare styles hatao
-    face.classList.remove('happy', 'sleepy', 'angry', 'neutral');
-    
-    // Naya expression lagao
-    if (emotionName) {
-        face.classList.add(emotionName);
+    faceContainer.className = 'face-container'; // Sab reset karo
+    if (emotionName && emotionName !== 'neutral') {
+        faceContainer.classList.add(emotionName);
     }
 }
 
-// Stealth Panel ko dikhane ya chhupane ke liye
-function togglePanel() {
-    document.getElementById('control-panel').classList.toggle('panel-active');
+// ----------------------------------------------------
+// THE NEURAL VOICE & LIP-SYNC ENGINE
+// ----------------------------------------------------
+function speakVoice(text, emotionStr) {
+    if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        
+        // Robot ki aawaz thodi smooth aur pitch adjust karne ke liye
+        utterance.pitch = 1.2; 
+        utterance.rate = 1.0;  
+        
+        // Emotion set karo bolne se pehle
+        setEmotion(emotionStr);
+
+        // Jab naya word bole, tabhi munh hile (Lip Sync)
+        utterance.onboundary = (event) => {
+            if (event.name === 'word') {
+                faceContainer.classList.add('talking');
+                // Word khatam hone par munh band
+                setTimeout(() => faceContainer.classList.remove('talking'), 150); 
+            }
+        };
+
+        // Jab bolna khatam ho jaye
+        utterance.onend = () => {
+            faceContainer.classList.remove('talking');
+            setTimeout(() => setEmotion('neutral'), 1000); // 1 sec baad neutral
+        };
+
+        window.speechSynthesis.speak(utterance);
+    }
 }
+// ----------------------------------------------------
 
-// --- 3. LOGIC & CAMERA ZONE ---
-
-// Camera switch karne ka logic (Front/Back)
+// Camera Logic
 async function switchCamera(mode) {
-    if (currentStream) {
-        currentStream.getTracks().forEach(track => track.stop());
-    }
-    const constraints = { video: { facingMode: mode } };
-    currentStream = await navigator.mediaDevices.getUserMedia(constraints);
+    if (currentStream) currentStream.getTracks().forEach(track => track.stop());
+    currentStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: mode } });
     video.srcObject = currentStream;
 }
 
-// Cloud ko frame bhejna
+// Cloud se process karna
 async function sendFrame() {
     const canvas = document.createElement('canvas');
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
+    canvas.width = video.videoWidth; canvas.height = video.videoHeight;
     canvas.getContext('2d').drawImage(video, 0, 0);
     
     canvas.toBlob(async (blob) => {
-        const formData = new FormData();
-        formData.append('file', blob);
+        const formData = new FormData(); formData.append('file', blob);
 
         try {
             const response = await fetch(`${CLOUD_URL}/process_frame`, {
-                method: 'POST',
-                body: formData,
+                method: 'POST', body: formData,
                 headers: { "Authorization": `Bearer ${HF_TOKEN}` }
             });
             const data = await response.json();
             
-            // Agar cloud se koi emotion aaye toh yahan update hoga
-            if(data.emotion) setEmotion(data.emotion);
-            
-        } catch (e) { console.log("Connecting to Cloud..."); }
+            // YAHAN MAGIC HOGA: Cloud se text aur emotion aayega
+            if(data.message) {
+                // Pehle "Thinking" mode hatao
+                speakVoice(data.message, data.emotion);
+            }
+        } catch (e) { 
+            console.log("Processing..."); 
+            // setEmotion('confused'); // Agar connection tute toh confuse ho jaye
+        }
     }, 'image/jpeg', 0.5);
 }
 
-// Dashboard ke buttons se commands bhejna
-function sendCommand(cmd) {
-    console.log("Sending Command: " + cmd);
-    
-    // Commands ke hisaab se face react karega
-    if(cmd === 'ON') setEmotion('happy');
-    if(cmd === 'SLEEP') setEmotion('sleepy');
-    if(cmd === 'WAKE') setEmotion('neutral');
-    if(cmd === 'OFF') setEmotion('angry');
+function togglePanel() { document.getElementById('control-panel').classList.toggle('panel-active'); }
 
-    // ESP32 link (Yahan IP address aayega baad mein)
-    // fetch(`http://192.168.x.x/${cmd}`); 
+function sendCommand(cmd) {
+    console.log("CMD: " + cmd);
+    // Testing the voice directly from buttons
+    if(cmd === 'ON') speakVoice("System online and ready.", "happy");
+    if(cmd === 'SLEEP') speakVoice("Going to sleep now.", "sleepy");
+    if(cmd === 'WAKE') speakVoice("I am awake.", "surprised");
 }
 
-// --- 4. STARTUP ZONE ---
-switchCamera('user'); // App khulte hi front camera chalu hoga
-setInterval(sendFrame, 2000); // Har 2 second mein cloud ko frame bhejega
+switchCamera('user');
+// setInterval(sendFrame, 3000); // Har 3 sec frame bhejega (Abhi comment rakha hai testing ke liye)
