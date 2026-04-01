@@ -1,97 +1,87 @@
+/* Sab kuch reset karo taaki koi margin na bache */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
 body { 
     background: #000; 
     color: #0ff; 
-    margin: 0; 
-    overflow: hidden; 
-}
-
-.main-layout { 
     width: 100vw; 
     height: 100vh; 
+    overflow: hidden; /* Scrollbar block karega */
     display: flex; 
     justify-content: center; 
     align-items: center; 
 }
 
-/* 1. 3-Dot Menu - FIXED kiya hai taaki hamesha top-right kone mein rahe */
+/* ========================================= */
+/* 1. 3-DOT MENU (Top Right mein FeVicol jaisa lock) */
+/* ========================================= */
 #menu-switch { 
-    position: fixed; 
+    position: absolute; 
     top: 20px; 
     right: 30px; 
     z-index: 9999; 
-    font-size: 45px; 
+    font-size: 50px; 
     background: transparent; 
     border: none; 
     color: #0ff; 
-    cursor: pointer; 
-    text-shadow: 0 0 15px #0ff; 
+    text-shadow: 0 0 20px #0ff;
 }
 
-/* 2. Face Container */
+/* ========================================= */
+/* 2. FACE SIZING (Full Screen Massive Look) */
+/* ========================================= */
 .face-container { 
     display: flex; 
     flex-direction: column; 
-    justify-content: center; 
-    align-items: center;
-    width: 100%;
+    align-items: center; 
+    gap: 12vh; /* Aankh aur munh ke beech duri */
 }
 
-/* 3. The Eyes - Ab screen ki height ke hisaab se massive hongi */
 .eyes { 
     display: flex; 
-    gap: 20vw; /* Aankhon ke beech ki duri screen ka 20% hogi */
-    margin-bottom: 12vh; /* Aankhon aur munh ke beech ka gap */
+    gap: 15vw; /* Aankhon ke beech ki duri */
 }
 
 .eye { 
-    width: 40vh;  /* Screen ki height ka 40% (Bohot bada size) */
+    width: 40vh; /* Screen ki height ka 40% - BAHUT BADA */
     height: 40vh; 
     background: #0ff; 
     border-radius: 50%; 
-    box-shadow: 0 0 40px rgba(0, 255, 255, 0.8), inset 0 0 10px #fff; 
+    box-shadow: 0 0 50px rgba(0, 255, 255, 0.9); 
     transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55); 
-    animation: blink 5s infinite;
 }
 
-/* 4. The Mouth - Lamba aur mota capsule */
 .mouth { 
-    width: 35vw;  /* Screen ki width ka 35% lamba */
-    height: 10vh; /* Mota pill shape */
+    width: 40vw; /* Munh bhi screen ke hisaab se lamba hoga */
+    height: 10vh; 
     background: #0ff; 
     border-radius: 50px; 
-    box-shadow: 0 0 30px rgba(0, 255, 255, 0.8); 
+    box-shadow: 0 0 40px rgba(0, 255, 255, 0.9); 
     transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55); 
 }
 
-/* Status Text - Hata diya taaki screen saaf rahe, agar chahiye to bottom fix karo */
-.status-text { display: none; }
-
 /* ========================================= */
-/* 🎭 THE EMOTIONS (Scaled for Massive Size) */
+/* 3. CONTROL PANEL */
 /* ========================================= */
+.controls-panel { 
+    position: absolute; top: 0; right: 0; width: 350px; height: 100vh; 
+    background: rgba(0,0,0,0.95); border-left: 2px solid #0ff; padding: 20px; 
+    transform: translateX(100%); transition: transform 0.3s ease-out; z-index: 10000; 
+    display: flex; flex-direction: column; 
+}
+.panel-active { transform: translateX(0); }
+.panel-content { display: grid; grid-template-rows: auto auto 1fr; gap: 10px; }
+button { background: #000; border: 1px solid #0ff; color: #0ff; padding: 15px; border-radius: 5px; font-weight: bold; font-size: 16px; }
+#videoFeed { width: 100%; height: 200px; border: 2px solid #0ff; margin-top: 10px; border-radius: 10px; object-fit: cover; }
 
-/* Happy (^ ^) */
+/* Emotions (Naye size ke hisaab se set) */
 .happy .eye { height: 15vh; border-radius: 50vw 50vw 5vw 5vw; margin-top: 25vh; }
-.happy .mouth { width: 45vw; height: 25vh; border-radius: 2vw 2vw 45vw 45vw; margin-top: -5vh; }
-
-/* Sad (U U) */
-.sad .eye { height: 18vh; border-radius: 5vw 5vw 50vw 50vw; opacity: 0.8; }
-.sad .mouth { width: 30vw; height: 15vh; border-radius: 50vw 50vw 5vw 5vw; margin-top: 5vh; }
-
-/* Angry (\ /) */
+.happy .mouth { width: 50vw; height: 20vh; border-radius: 2vw 2vw 50vw 50vw; margin-top: -5vh; }
+.sad .eye { height: 20vh; border-radius: 5vw 5vw 50vw 50vw; opacity: 0.8; }
+.sad .mouth { width: 30vw; height: 10vh; border-radius: 50vw 50vw 5vw 5vw; margin-top: 5vh; }
 .angry .eye.left { transform: rotate(25deg); border-radius: 5vw 50vw 5vw 5vw; }
 .angry .eye.right { transform: rotate(-25deg); border-radius: 50vw 5vw 5vw 5vw; }
-.angry .mouth { width: 25vw; height: 5vh; border-radius: 5vw; margin-top: 5vh; }
-
-/* Lip Sync Animation */
-.talking .mouth { height: 25vh; border-radius: 20vh; width: 25vh; } /* Pura gol khulega */
-
-@keyframes blink { 0%, 92%, 100% { transform: scaleY(1); } 96% { transform: scaleY(0.1); } }
-
-/* Controls Panel */
-.controls-panel { position: fixed; top: 0; right: 0; width: 350px; height: 100vh; background: rgba(0,0,0,0.95); border-left: 2px solid #0ff; padding: 20px; box-sizing: border-box; transform: translateX(100%); transition: transform 0.4s ease-out; z-index: 10000; display: flex; flex-direction: column; }
-.panel-active { transform: translateX(0); }
-.panel-content { display: grid; grid-template-rows: auto auto 1fr; gap: 15px; }
-button { background: rgba(0,255,255,0.1); border: 1px solid #0ff; color: #0ff; padding: 15px; cursor: pointer; border-radius: 8px; font-weight: bold; width: 100%; font-size: 16px; }
-button:hover { background: #0ff; color: #000; box-shadow: 0 0 15px #0ff; }
-#videoFeed { width: 100%; height: 200px; border: 2px solid #0ff; border-radius: 10px; margin-top: 15px; object-fit: cover; }
+.angry .mouth { width: 30vw; height: 6vh; border-radius: 5vw; margin-top: 5vh; }
+.sleepy .eye { height: 5vh; border-radius: 5vw; margin-top: 35vh; opacity: 0.4; }
+.sleepy .mouth { width: 15vw; height: 5vh; border-radius: 50px; opacity: 0.4; }
+.talking .mouth { height: 25vh; border-radius: 20vh; width: 25vh; }
