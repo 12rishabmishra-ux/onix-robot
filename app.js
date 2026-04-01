@@ -1,6 +1,6 @@
 // --- CONFIG ---
 const CLOUD_URL = "https://Onix-Labs-ONIX-ROBOT-BRAIN.hf.space"; 
-const HF_TOKEN = "hf_TERA_TOKEN_DALO"; // <--- Apna token yahan paste kar
+const HF_TOKEN = "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"; // <--- Apna token yahan paste kar
 
 let systemState = 'ACTIVE'; 
 let isSpeaking = false;
