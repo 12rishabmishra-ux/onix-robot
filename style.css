@@ -1,0 +1,9 @@
+body { background: #000; color: #0ff; font-family: 'Courier New', monospace; margin: 0; overflow: hidden; }
+.dashboard { display: flex; height: 100vh; padding: 20px; box-sizing: border-box; }
+.face-container { flex: 1; display: flex; justify-content: center; align-items: center; position: relative; border-right: 1px solid #0ff3; }
+.eye { width: 120px; height: 120px; background: radial-gradient(circle, #0ff 30%, transparent 70%); border: 4px solid #0ff; border-radius: 50%; box-shadow: 0 0 20px #0ff; margin: 20px; animation: glow 2s infinite alternate; }
+.controls { flex: 1; padding: 20px; display: grid; grid-template-rows: auto auto 1fr; gap: 15px; }
+button { background: rgba(0, 255, 255, 0.1); border: 1px solid #0ff; color: #0ff; padding: 10px; cursor: pointer; border-radius: 5px; font-weight: bold; }
+button:hover { background: #0ff; color: #000; }
+#videoFeed { width: 100%; height: 150px; border: 1px solid #0ff; margin-top: 10px; }
+@keyframes glow { from { opacity: 0.5; } to { opacity: 1; } }

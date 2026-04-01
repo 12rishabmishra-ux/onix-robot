@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, orientation=landscape">
+    <link rel="stylesheet" href="style.css">
+    <title>ONIX Master Control</title>
+</head>
+<body class="landscape">
+    <div class="dashboard">
+        <div class="face-container">
+            <div class="eye left"></div>
+            <div class="eye right"></div>
+            <div class="status-text">SYSTEM: ACTIVE</div>
+        </div>
+
+        <div class="controls">
+            <div class="power-group">
+                <button onclick="sendCommand('ON')">POWER ON</button>
+                <button onclick="sendCommand('OFF')">SHUTDOWN</button>
+                <button onclick="sendCommand('SLEEP')">SLEEP</button>
+                <button onclick="sendCommand('WAKE')">WAKE UP</button>
+            </div>
+            <div class="camera-group">
+                <button onclick="switchCamera('user')">FRONT</button>
+                <button onclick="switchCamera('environment')">BACK</button>
+                <button onclick="dualCamera()">DUAL</button>
+            </div>
+            <video id="videoFeed" autoplay playsinline></video>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>

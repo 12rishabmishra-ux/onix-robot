@@ -1,0 +1,10 @@
+{
+  "name": "ONIX Humanoid",
+  "short_name": "ONIX",
+  "start_url": "index.html",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#000000",
+  "theme_color": "#00ffff",
+  "icons": [{ "src": "icon.png", "sizes": "512x512", "type": "image/png" }]
+}
