@@ -1,9 +1,32 @@
 body { background: #000; color: #0ff; font-family: 'Courier New', monospace; margin: 0; overflow: hidden; }
-.dashboard { display: flex; height: 100vh; padding: 20px; box-sizing: border-box; }
-.face-container { flex: 1; display: flex; justify-content: center; align-items: center; position: relative; border-right: 1px solid #0ff3; }
-.eye { width: 120px; height: 120px; background: radial-gradient(circle, #0ff 30%, transparent 70%); border: 4px solid #0ff; border-radius: 50%; box-shadow: 0 0 20px #0ff; margin: 20px; animation: glow 2s infinite alternate; }
-.controls { flex: 1; padding: 20px; display: grid; grid-template-rows: auto auto 1fr; gap: 15px; }
-button { background: rgba(0, 255, 255, 0.1); border: 1px solid #0ff; color: #0ff; padding: 10px; cursor: pointer; border-radius: 5px; font-weight: bold; }
+.main-layout { display: flex; height: 100vh; position: relative; }
+
+/* Stealth Menu Button */
+#menu-switch {
+    position: absolute; top: 10px; right: 10px; z-index: 1000;
+    font-size: 30px; background: transparent; border: none; color: #0ff; cursor: pointer;
+}
+
+/* Face (Centered & Real Emotions) */
+.face-container { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; border-right: 1px solid #0ff3; transition: opacity 0.3s; }
+.eyes { display: flex; gap: 40px; margin-bottom: 30px; }
+.eye { width: 100px; height: 100px; background: radial-gradient(circle, #0ff 30%, transparent 70%); border: 4px solid #0ff; border-radius: 50%; box-shadow: 0 0 20px #0ff; animation: glow 2s infinite alternate; }
+
+/* Mouth (Voiceless issue fixed) */
+.mouth { width: 150px; height: 10px; background: #0ff; border-radius: 5px; box-shadow: 0 0 20px #0ff; transition: all 0.3s; }
+.talking .mouth { height: 40px; animation: speak 0.3s infinite alternate; }
+
+/* Stealth Panel Logic */
+.controls-panel {
+    position: absolute; top: 0; right: 0; width: 350px; height: 100vh;
+    background: rgba(0, 0, 0, 0.9); border-left: 2px solid #0ff; padding: 20px; box-sizing: border-box;
+    transform: translateX(100%); transition: transform 0.3s ease-out; z-index: 999; display: flex; flex-direction: column;
+}
+.panel-active { transform: translateX(0); } /* <--- THIS ACTIVATES THE PANEL */
+
+.panel-content { display: grid; grid-template-rows: auto auto 1fr; gap: 15px; }
+button { background: rgba(0, 255, 255, 0.1); border: 1px solid #0ff; color: #0ff; padding: 10px; cursor: pointer; border-radius: 5px; font-weight: bold; width: 100%; }
 button:hover { background: #0ff; color: #000; }
-#videoFeed { width: 100%; height: 150px; border: 1px solid #0ff; margin-top: 10px; }
+#videoFeed { width: 100%; height: 180px; border: 1px solid #0ff; border-radius: 10px; margin-top: 10px; }
 @keyframes glow { from { opacity: 0.5; } to { opacity: 1; } }
+@keyframes speak { from { height: 10px; } to { height: 40px; } }
