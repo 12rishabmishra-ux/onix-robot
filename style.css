@@ -1,49 +1,63 @@
 body { background: #000; color: #0ff; font-family: 'Courier New', monospace; margin: 0; overflow: hidden; }
-.main-layout { display: flex; height: 100vh; position: relative; }
-#menu-switch { position: absolute; top: 10px; right: 10px; z-index: 1000; font-size: 30px; background: transparent; border: none; color: #0ff; cursor: pointer; }
-.face-container { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+.main-layout { display: flex; height: 100vh; width: 100vw; position: relative; }
+
+/* 3-Dot Menu - Thoda bada aur glow ke sath */
+#menu-switch { position: absolute; top: 15px; right: 20px; z-index: 1000; font-size: 35px; background: transparent; border: none; color: #0ff; cursor: pointer; text-shadow: 0 0 10px #0ff; }
+
+/* Face Container - Pura screen cover karne ke liye */
+.face-container { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; }
 
 /* --- THE EYES ENGINE --- */
-.eyes { display: flex; gap: 50px; margin-bottom: 40px; }
+.eyes { 
+    display: flex; 
+    gap: 15vw; /* Aankhon ke beech ki duri ab screen ki width ke hisaab se hogi */
+    margin-bottom: 10vh; /* Munh aur aankhon ke beech ka gap badha diya */
+}
 .eye { 
-    width: 110px; height: 110px; background: #0ff; border-radius: 50%; 
-    box-shadow: 0 0 30px rgba(0, 255, 255, 0.8); 
+    width: 160px; /* Aankhein pehle se badi (110px -> 160px) */
+    height: 160px; 
+    background: #0ff; border-radius: 50%; 
+    box-shadow: 0 0 40px rgba(0, 255, 255, 0.8); 
     transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55); 
     animation: blink 4s infinite;
 }
 
 /* --- THE MOUTH ENGINE --- */
 .mouth { 
-    width: 60px; height: 10px; background: #0ff; border-radius: 5px; 
+    width: 160px; /* Munh ab lamba (wide) hoga */
+    height: 15px; /* Thoda sa mota kar diya */
+    background: #0ff; border-radius: 10px; 
     box-shadow: 0 0 20px rgba(0, 255, 255, 0.5); 
-    transition: all 0.1s; /* Fast transition for lip-sync */
+    transition: all 0.1s; 
 }
 
-/* --- THE 8 EMOTIONS --- */
-/* 1. Happy (^ ^) */
-.happy .eye { height: 50px; border-radius: 100px 100px 15px 15px; margin-top: 30px; }
-/* 2. Sad (U U) */
-.sad .eye { height: 60px; border-radius: 15px 15px 100px 100px; margin-top: 10px; opacity: 0.7; }
-.sad .mouth { width: 50px; border-radius: 50px 50px 10px 10px; height: 15px; margin-top: 20px; }
-/* 3. Angry (\ /) */
-.angry .eye.left { transform: rotate(25deg); border-radius: 15px 100px 15px 15px; }
-.angry .eye.right { transform: rotate(-25deg); border-radius: 100px 15px 15px 15px; }
-.angry .mouth { width: 70px; height: 10px; border-radius: 50px 50px 10px 10px; }
-/* 4. Sleepy (- -) */
-.sleepy .eye { height: 15px; border-radius: 10px; margin-top: 45px; opacity: 0.4; animation: none; }
-.sleepy .mouth { width: 20px; opacity: 0.4; }
-/* 5. Surprised (O O) */
-.surprised .eye { width: 130px; height: 130px; margin-top: -10px; }
-.surprised .mouth { width: 40px; height: 40px; border-radius: 50%; }
-/* 6. Confused / Sceptic (o -) */
-.confused .eye.left { height: 30px; border-radius: 10px; margin-top: 40px; }
-.confused .mouth { width: 40px; transform: rotate(-15deg); }
-/* 7. Wink (- O) */
-.wink .eye.left { height: 15px; border-radius: 10px; margin-top: 45px; animation: none; }
-.wink .mouth { width: 60px; height: 30px; border-radius: 10px 10px 50px 50px; transform: rotate(10deg); }
+/* Status Text - Ise ekdum neeche bhej diya */
+.status-text {
+    position: absolute;
+    bottom: 20px; /* Screen ke ekdum bottom mein */
+    font-size: 16px;
+    letter-spacing: 3px;
+    opacity: 0.6;
+}
+
+/* --- THE 8 EMOTIONS (Updated sizes for larger face) --- */
+.happy .eye { height: 70px; border-radius: 150px 150px 20px 20px; margin-top: 45px; }
+.sad .eye { height: 80px; border-radius: 20px 20px 150px 150px; margin-top: 10px; opacity: 0.7; }
+.sad .mouth { width: 80px; border-radius: 50px 50px 10px 10px; height: 20px; margin-top: 30px; }
+.angry .eye.left { transform: rotate(25deg); border-radius: 20px 150px 20px 20px; }
+.angry .eye.right { transform: rotate(-25deg); border-radius: 150px 20px 20px 20px; }
+.angry .mouth { width: 90px; height: 15px; border-radius: 50px 50px 10px 10px; }
+.sleepy .eye { height: 20px; border-radius: 10px; margin-top: 70px; opacity: 0.4; animation: none; }
+.sleepy .mouth { width: 40px; opacity: 0.4; }
+.surprised .eye { width: 190px; height: 190px; margin-top: -15px; }
+.surprised .mouth { width: 60px; height: 60px; border-radius: 50%; }
+.confused .eye.left { height: 40px; border-radius: 10px; margin-top: 60px; }
+.confused .mouth { width: 60px; transform: rotate(-15deg); }
+.wink .eye.left { height: 20px; border-radius: 10px; margin-top: 70px; animation: none; }
+.wink .mouth { width: 80px; height: 40px; border-radius: 10px 10px 60px 60px; transform: rotate(10deg); }
 
 /* Lip Sync Animation Class */
-.talking .mouth { height: 40px; border-radius: 20px; width: 50px; }
+.talking .mouth { height: 60px; border-radius: 30px; width: 80px; }
 
 @keyframes blink { 0%, 90%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
 
@@ -53,4 +67,4 @@ body { background: #000; color: #0ff; font-family: 'Courier New', monospace; mar
 .panel-content { display: grid; grid-template-rows: auto auto 1fr; gap: 15px; }
 button { background: rgba(0,255,255,0.1); border: 1px solid #0ff; color: #0ff; padding: 10px; cursor: pointer; border-radius: 5px; font-weight: bold; width: 100%; }
 button:hover { background: #0ff; color: #000; }
-#videoFeed { width: 100%; height: 180px; border: 1px solid #0ff; border-radius: 10px; margin-top: 10px; }
+#videoFeed { width: 100%; height: 180px; border: 1px solid #0ff; border-radius: 10px; margin-top: 10px; object-fit: cover; }
