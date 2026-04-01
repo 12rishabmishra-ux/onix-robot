@@ -7,7 +7,7 @@
     <title>ONIX Humanoid</title>
 </head>
 
-<body onclick="goFullScreen()">
+<body onclick="goFullScreen(); closePanelExternal(event)">
 
     <button id="menu-switch" onclick="event.stopPropagation(); togglePanel();">⋮</button>
 
@@ -21,15 +21,20 @@
 
     <div id="control-panel" class="controls-panel" onclick="event.stopPropagation();">
         <div class="panel-content">
-            <h3 style="color:#0ff; text-align:center; margin-bottom:10px;">ONIX COMMANDS</h3>
+            <button class="close-btn" onclick="togglePanel()">✕ CLOSE</button>
+            
+            <h3 style="color:#0ff; text-align:center; margin-bottom:10px; margin-top:20px;">ONIX COMMANDS</h3>
+            
             <button onclick="sendCommand('ON')">POWER ON</button>
             <button onclick="sendCommand('OFF')">SHUTDOWN</button>
             <button onclick="sendCommand('SLEEP')">SLEEP</button>
             <button onclick="sendCommand('WAKE')">WAKE UP</button>
+            
             <div style="display:flex; gap:10px;">
-                <button style="flex:1" onclick="switchCamera('user')">FRONT CAM</button>
-                <button style="flex:1" onclick="switchCamera('environment')">BACK CAM</button>
+                <button style="flex:1" onclick="switchCamera('user')">FRONT</button>
+                <button style="flex:1" onclick="switchCamera('environment')">BACK</button>
             </div>
+            
             <video id="videoFeed" autoplay playsinline muted></video>
         </div>
     </div>
@@ -37,10 +42,8 @@
     <script src="app.js"></script>
     
     <script>
-        // BROWSER BARS KO HATANE WALA MAGIC FUNCTION
         function goFullScreen() {
             let elem = document.documentElement;
-            // Agar fullscreen nahi hai toh fullscreen request karo
             if (!document.fullscreenElement) {
                 elem.requestFullscreen().catch((err) => {
                     console.log(`Error: ${err.message}`);
@@ -48,12 +51,13 @@
             }
         }
 
-        // Android par navigation bar hide karne ke liye
-        window.addEventListener("load", function() {
-            setTimeout(function() {
-                window.scrollTo(0, 1);
-            }, 0);
-        });
+        // Panel ke bahar click karne par band karne ka logic
+        function closePanelExternal(event) {
+            const panel = document.getElementById('control-panel');
+            if (panel.classList.contains('panel-active')) {
+                panel.classList.remove('panel-active');
+            }
+        }
     </script>
 </body>
 </html>
