@@ -1,84 +1,125 @@
-// --- 1. CONFIG (Apni details yahan bharein) ---
 const CLOUD_URL = "https://Onix-Labs-ONIX-ROBOT-BRAIN.hf.space"; 
-const HF_TOKEN = "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"; 
+const HF_TOKEN = "hf_TERA_TOKEN_YAHAN_DAAL"; // Apna Token dalna mat bhulna
 
-const panel = document.getElementById('control-panel');
-const face = document.querySelector('.face-container');
+let currentStream;
 const video = document.getElementById('videoFeed');
+const faceContainer = document.querySelector('.face-container');
 
-// --- 2. FACE & VOICE ENGINE ---
-function setEmotion(emotion) {
-    face.className = 'face-container';
-    if(emotion && emotion !== 'neutral') face.classList.add(emotion);
-}
+// ROBOT KA STATE MEMORY (Dimag)
+let systemState = 'ACTIVE'; 
+let isSpeaking = false;
 
-function speakVoice(text, emotion) {
-    if ('speechSynthesis' in window) {
-        const msg = new SpeechSynthesisUtterance(text);
-        msg.pitch = 1.1; msg.rate = 0.9;
-        setEmotion(emotion);
-
-        msg.onboundary = (e) => {
-            if(e.name === 'word') {
-                face.classList.add('talking');
-                setTimeout(() => face.classList.remove('talking'), 150);
-            }
-        };
-        msg.onend = () => {
-            face.classList.remove('talking');
-            setTimeout(() => setEmotion('neutral'), 1500);
-        };
-        window.speechSynthesis.speak(msg);
+// ----------------------------------------------------
+// 1. EMOTION CONTROL LOGIC
+// ----------------------------------------------------
+function setEmotion(emotionName) {
+    // Purane sabhi expressions hatao
+    faceContainer.className = 'face-container'; 
+    
+    if (emotionName && emotionName !== 'neutral') {
+        faceContainer.classList.add(emotionName);
     }
 }
 
-// --- 3. SYSTEM LOGIC ---
-function togglePanel() {
-    panel.classList.toggle('panel-active');
-    face.style.filter = panel.classList.contains('panel-active') ? "blur(8px)" : "none";
-}
-
-function handleGlobalClick() {
-    // Force Fullscreen
-    let elem = document.documentElement;
-    if (!document.fullscreenElement) elem.requestFullscreen().catch(e => {});
+// ----------------------------------------------------
+// 2. THE REALISTIC LIP-SYNC ENGINE (Asli Humanoid Feel)
+// ----------------------------------------------------
+function startLipSync() {
+    isSpeaking = true;
+    const mouth = document.querySelector('.mouth');
+    mouth.classList.add('is-speaking'); // Fast CSS transition active
     
-    // Auto-close menu
-    if (panel.classList.contains('panel-active')) togglePanel();
+    function animateMouth() {
+        if (!isSpeaking) {
+            // Bolna band, munh wapas normal
+            mouth.style.height = ''; 
+            mouth.style.borderRadius = '';
+            mouth.classList.remove('is-speaking');
+            return;
+        }
+        
+        // Random syllable logic (5vh se 20vh ke beech munh khulega)
+        let h = Math.floor(Math.random() * 15) + 5; 
+        mouth.style.height = `${h}vh`;
+        mouth.style.borderRadius = `${h/2}vh`;
+        
+        // Har 150ms me munh ki shape badlegi (Natural sound waves ki tarah)
+        setTimeout(animateMouth, 150); 
+    }
+    animateMouth();
 }
 
-async function switchCamera(mode) {
-    if (window.stream) window.stream.getTracks().forEach(t => t.stop());
-    window.stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: mode } });
-    video.srcObject = window.stream;
+function stopLipSync() {
+    isSpeaking = false;
 }
 
-async function sendFrame() {
-    const canvas = document.createElement('canvas');
-    canvas.width = video.videoWidth; canvas.height = video.videoHeight;
-    canvas.getContext('2d').drawImage(video, 0, 0);
-    
-    canvas.toBlob(async (blob) => {
-        const formData = new FormData(); formData.append('file', blob);
-        try {
-            const res = await fetch(`${CLOUD_URL}/process_frame`, {
-                method: 'POST', body: formData,
-                headers: { "Authorization": `Bearer ${HF_TOKEN}` }
-            });
-            const data = await res.json();
-            if(data.message) speakVoice(data.message, data.emotion);
-        } catch (e) { console.log("Thinking..."); }
-    }, 'image/jpeg', 0.5);
+// ----------------------------------------------------
+// 3. VOICE ENGINE WITH STATE AWARENESS
+// ----------------------------------------------------
+function speakVoice(text, emotionStr) {
+    if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.pitch = 1.2; 
+        utterance.rate = 1.0;  
+        
+        setEmotion(emotionStr);
+
+        // Jab bolna shuru kare toh munh hilaana shuru
+        utterance.onstart = () => { startLipSync(); };
+
+        // Jab bolna band kare (YAHAN MAGIC HAI)
+        utterance.onend = () => {
+            stopLipSync();
+            
+            // State ke hisaab se face set karo (Taaki wo apne aap na jage)
+            if (systemState === 'ACTIVE') {
+                setTimeout(() => setEmotion('neutral'), 1000);
+            } else if (systemState === 'SLEEP') {
+                setEmotion('sleepy'); // So gaya toh sota rahega
+            } else if (systemState === 'SHUTDOWN') {
+                setEmotion('shutdown'); // Screen kaali ho jayegi
+            }
+        };
+
+        window.speechSynthesis.speak(utterance);
+    }
 }
 
+// ----------------------------------------------------
+// 4. COMMANDS & HARDWARE ACTIONS
+// ----------------------------------------------------
 function sendCommand(cmd) {
-    console.log("ESP32 CMD: " + cmd);
-    if(cmd === 'ON') speakVoice("System online. Hello Bhai!", "happy");
-    if(cmd === 'SLEEP') speakVoice("Powering down to sleep mode.", "sleepy");
-    if(cmd === 'OFF') speakVoice("Initiating emergency shutdown.", "angry");
+    console.log("Hardware CMD Sent: " + cmd);
+    
+    // Yahan buttons dabane par alag-alag states trigger hongi
+    if(cmd === 'ON' || cmd === 'WAKE') {
+        systemState = 'ACTIVE';
+        speakVoice("System Online. I am ready.", "surprised");
+    }
+    else if(cmd === 'SLEEP') {
+        systemState = 'SLEEP';
+        speakVoice("Powering down to sleep mode.", "sleepy");
+    }
+    else if(cmd === 'OFF') {
+        systemState = 'SHUTDOWN';
+        speakVoice("Initiating emergency shutdown.", "sad");
+    }
+
+    // Hardware ko bhejna (ESP32 IP)
     // fetch(`http://192.168.x.x/${cmd}`); 
 }
 
-// Start Up
+// ----------------------------------------------------
+// 5. CAMERA & CLOUD LOGIC
+// ----------------------------------------------------
+async function switchCamera(mode) {
+    if (currentStream) currentStream.getTracks().forEach(track => track.stop());
+    currentStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: mode } });
+    video.srcObject = currentStream;
+}
+
+function togglePanel() { 
+    document.getElementById('control-panel').classList.toggle('panel-active'); 
+}
+
 switchCamera('user');
-// setInterval(sendFrame, 4000);
