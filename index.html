@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <link rel="stylesheet" href="style.css">
-    <link rel="manifest" href="manifest.json">
     <title>ONIX Humanoid</title>
 </head>
-<body onclick="handleGlobalClick()">
+
+<body onclick="goFullScreen()">
 
     <button id="menu-switch" onclick="event.stopPropagation(); togglePanel();">⋮</button>
 
@@ -17,30 +17,43 @@
             <div class="eye right"></div>
         </div>
         <div class="mouth"></div>
-        <div class="status-text">SYSTEM: ACTIVE</div>
     </div>
 
     <div id="control-panel" class="controls-panel" onclick="event.stopPropagation();">
-        <div class="panel-header">
-            <span>ONIX COMMANDS</span>
-            <button class="close-btn" onclick="togglePanel()">×</button>
-        </div>
         <div class="panel-content">
-            <div class="btn-grid">
-                <button onclick="sendCommand('ON')">POWER ON</button>
-                <button onclick="sendCommand('OFF')">SHUTDOWN</button>
-                <button onclick="sendCommand('SLEEP')">SLEEP</button>
-                <button onclick="sendCommand('WAKE')">WAKE UP</button>
-            </div>
-            <hr style="border:0.5px solid #0ff3;">
-            <div class="btn-grid">
-                <button onclick="switchCamera('user')">FRONT CAM</button>
-                <button onclick="switchCamera('environment')">BACK CAM</button>
+            <h3 style="color:#0ff; text-align:center; margin-bottom:10px;">ONIX COMMANDS</h3>
+            <button onclick="sendCommand('ON')">POWER ON</button>
+            <button onclick="sendCommand('OFF')">SHUTDOWN</button>
+            <button onclick="sendCommand('SLEEP')">SLEEP</button>
+            <button onclick="sendCommand('WAKE')">WAKE UP</button>
+            <div style="display:flex; gap:10px;">
+                <button style="flex:1" onclick="switchCamera('user')">FRONT CAM</button>
+                <button style="flex:1" onclick="switchCamera('environment')">BACK CAM</button>
             </div>
             <video id="videoFeed" autoplay playsinline muted></video>
         </div>
     </div>
 
     <script src="app.js"></script>
+    
+    <script>
+        // BROWSER BARS KO HATANE WALA MAGIC FUNCTION
+        function goFullScreen() {
+            let elem = document.documentElement;
+            // Agar fullscreen nahi hai toh fullscreen request karo
+            if (!document.fullscreenElement) {
+                elem.requestFullscreen().catch((err) => {
+                    console.log(`Error: ${err.message}`);
+                });
+            }
+        }
+
+        // Android par navigation bar hide karne ke liye
+        window.addEventListener("load", function() {
+            setTimeout(function() {
+                window.scrollTo(0, 1);
+            }, 0);
+        });
+    </script>
 </body>
 </html>
